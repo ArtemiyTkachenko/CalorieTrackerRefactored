@@ -39,4 +39,9 @@ abstract class UseCaseModule {
     abstract fun bindGetDishesByDateUseCase(
         getDishesByDateUseCaseImpl: GetDishesByDateUseCaseImpl
     ): GetDishesByDateUseCase
+
+    @Binds
+    abstract fun bindInsertDishUseCase(
+        insertDishUseCaseImpl: InsertDishUseCaseImpl
+    ): InsertDishUseCase
 }

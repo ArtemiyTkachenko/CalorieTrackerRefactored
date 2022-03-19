@@ -10,13 +10,20 @@ import android.view.ViewAnimationUtils
 import android.view.inputmethod.EditorInfo
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenCreated
 import com.artkachenko.core_api.utils.PrefManager
 import com.artkachenko.settings.databinding.FragmentSettingsBinding
 import com.artkachenko.ui_utils.ImageUtils
 import com.artkachenko.ui_utils.themes.Theme
 import com.artkachenko.ui_utils.themes.ThemeManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import viewBinding
 import javax.inject.Inject
 import kotlin.math.hypot
@@ -25,13 +32,9 @@ import kotlin.math.hypot
 @AndroidEntryPoint
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
-    @Inject
-    lateinit var prefManager: PrefManager
-
-    @Inject
-    lateinit var themeManager: ThemeManager
-
     private var binding by viewBinding<FragmentSettingsBinding>()
+
+    private val viewModel by activityViewModels<SettingsViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,37 +42,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         binding = FragmentSettingsBinding.bind(view)
 
         with(binding) {
-            darkThemeSwitch.isChecked = prefManager.isDarkTheme
 
-            darkThemeSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-                val newTheme = when (themeManager.theme) {
-                    Theme.DARK -> Theme.LIGHT
-                    Theme.LIGHT -> Theme.DARK
-                }
-                prefManager.isDarkTheme = newTheme == Theme.DARK
-                setTheme(newTheme)
+            darkThemeSwitch.setOnCheckedChangeListener { _, _ ->
+                viewModel.setNewTheme()
             }
 
-            desiredCaloriesText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    val parsedNumber = s.toString().toIntOrNull()
-                    parsedNumber?.let { prefManager.desiredCalories = it }
-                }
-            })
-
-            if (desiredCaloriesText.text.isNullOrEmpty()) desiredCaloriesText.setText(prefManager.desiredCalories.toString())
+            desiredCaloriesText.addTextChangedListener {
+                viewModel.setDesiredCalories(it.toString())
+            }
 
             desiredCaloriesText.setOnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -78,6 +58,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 false
             }
         }
+
+        initObservers()
     }
 
     override fun onResume() {
@@ -85,7 +67,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         super.onResume()
     }
 
-    private fun setTheme(theme: Theme) {
+    private fun setTheme() {
         with(binding) {
             if (themeImageView.isVisible) {
                 return
@@ -106,8 +88,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
             val finalRadius = hypot(w.toFloat(), h.toFloat())
 
-            themeManager.theme = theme
-
             val anim =
                 ViewAnimationUtils.createCircularReveal(container, animX, animY, 0f, finalRadius)
             anim.duration = 400L
@@ -116,6 +96,18 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 themeImageView.isVisible = false
             }
             anim.start()
+        }
+    }
+
+    private fun initObservers() {
+        lifecycleScope.launchWhenResumed {
+            viewModel.state.collect {
+                with(binding) {
+                    darkThemeSwitch.isChecked = it.isDarkTheme
+                    if (desiredCaloriesText.text.isNullOrEmpty()) desiredCaloriesText.setText(it.desiredCalories)
+                    setTheme()
+                }
+            }
         }
     }
 }
