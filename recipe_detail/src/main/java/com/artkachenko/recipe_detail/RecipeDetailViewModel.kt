@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.artkachenko.core_api.base.ViewModelScopeProvider
 import com.artkachenko.core_api.network.models.ManualDishDetail
 import com.artkachenko.core_api.network.models.RecipeDetailModel
-import com.artkachenko.core_api.network.repositories.DishesRepository
-import com.artkachenko.core_api.network.repositories.RecipeRepository
+import com.artkachenko.core_api.usecases.ConvertIngredientsUseCase
+import com.artkachenko.core_api.usecases.GetRecipeDetailUseCase
+import com.artkachenko.core_api.usecases.InsertDishUseCase
 import com.artkachenko.core_api.utils.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +17,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
-    private val repository: RecipeRepository,
-    private val dishesRepository: DishesRepository,
+    private val getRecipeDetailUseCase: GetRecipeDetailUseCase,
+    private val convertIngredientsUseCase: ConvertIngredientsUseCase,
+    private val insertDishUseCase: InsertDishUseCase,
     private val scopeProvider: ViewModelScopeProvider
 ) : ViewModel(), ViewModelScopeProvider by scopeProvider {
 
@@ -25,7 +27,7 @@ class RecipeDetailViewModel @Inject constructor(
 
     fun getRecipeDetail(id: Long) {
         scope.launch {
-            val detail = repository.getRecipeDetail(id)
+            val detail = getRecipeDetailUseCase.execute(id)
             debugLog("detail is $detail")
             channel.send(detail)
         }
@@ -38,7 +40,7 @@ class RecipeDetailViewModel @Inject constructor(
             val nutritionIncrement = servingSize.toDouble()
 
             val adjustedIngredients = model.extendedIngredients?.map {
-                val converted = repository.convertIngredients(
+                val converted = convertIngredientsUseCase.execute(
                     "ingredientName" to listOf(it.name ?: ""),
                     "sourceAmount" to listOf((it.amount?.times(ingredientIncrement)).toString()),
                     "sourceUnit" to listOf(it.unit ?: ""),
@@ -68,7 +70,7 @@ class RecipeDetailViewModel @Inject constructor(
                 nutrition = adjustedNutrition,
                 date = LocalDateTime.now()
             )
-            dishesRepository.insertDish(manualDish)
+            insertDishUseCase.execute(manualDish)
         }
     }
 }

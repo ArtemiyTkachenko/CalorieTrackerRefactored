@@ -5,7 +5,7 @@ import com.artkachenko.core_api.base.ViewModelScopeProvider
 import com.artkachenko.core_api.network.models.FilterItemWrapper
 import com.artkachenko.core_api.network.models.FilterWrapper
 import com.artkachenko.core_api.network.models.RecipeEntity
-import com.artkachenko.core_api.network.repositories.RecipeRepository
+import com.artkachenko.core_api.usecases.GetRecipeListUseCase
 import com.artkachenko.core_api.utils.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeSearchViewModel @Inject constructor(
-    private val recipeRepository: RecipeRepository,
+    private val getRecipeListUseCase: GetRecipeListUseCase,
     private val scopeProvider: ViewModelScopeProvider
 ) :
     ViewModel(), ViewModelScopeProvider by scopeProvider {
@@ -43,7 +43,7 @@ class RecipeSearchViewModel @Inject constructor(
         scope.launch {
             if (offset == 0) _state.value = State.FirstLoad
             isLoading = true
-            val recipes = recipeRepository.getRecipeList(
+            val recipes = getRecipeListUseCase.execute(
                 offset,
                 "query" to listOf(query),
                 "offset" to listOf(offset.toString()),
