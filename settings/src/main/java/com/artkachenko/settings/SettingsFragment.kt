@@ -3,34 +3,25 @@ package com.artkachenko.settings
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.inputmethod.EditorInfo
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.whenCreated
-import com.artkachenko.core_api.utils.PrefManager
+import com.artkachenko.core_api.base.BaseFragment
 import com.artkachenko.settings.databinding.FragmentSettingsBinding
 import com.artkachenko.ui_utils.ImageUtils
-import com.artkachenko.ui_utils.themes.Theme
-import com.artkachenko.ui_utils.themes.ThemeManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import viewBinding
-import javax.inject.Inject
 import kotlin.math.hypot
 
 
 @AndroidEntryPoint
-class SettingsFragment : Fragment(R.layout.fragment_settings) {
+class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
     private var binding by viewBinding<FragmentSettingsBinding>()
 

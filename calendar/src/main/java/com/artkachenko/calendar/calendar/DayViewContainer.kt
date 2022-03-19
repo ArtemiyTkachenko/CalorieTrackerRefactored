@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.artkachenko.calendar.R
 import com.artkachenko.calendar.databinding.IDayContainerBinding
 import com.artkachenko.ui_utils.Formatters
@@ -18,7 +20,6 @@ import kotlinx.coroutines.flow.collect
 class DayViewContainer(
     view: View,
     private val actions: CalendarActions,
-    private val scope: CoroutineScope,
     private val themeManager: ThemeManager
 ) : ViewContainer(view) {
 
@@ -41,7 +42,7 @@ class DayViewContainer(
             exSevenMonthText.text = Formatters.monthFormatter.format(day.date)
         }
 
-        scope.launch {
+        bind.root.findViewTreeLifecycleOwner()?.lifecycleScope?.launch {
             actions.getDate().collect { date ->
                 val color = when (themeManager.theme) {
                     Theme.DARK -> if (day.date == date) ContextCompat.getColor(view.context, R.color.purple_200) else Color.WHITE

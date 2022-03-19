@@ -9,11 +9,10 @@ import kotlinx.coroutines.InternalCoroutinesApi
 
 class DayViewBinder(
     private val bindings: CalendarActions,
-    private val scope: CoroutineScope,
     private val themeManager: ThemeManager
 ) :
     DayBinder<DayViewContainer> {
-    override fun create(view: View) = DayViewContainer(view, bindings, scope, themeManager)
+    override fun create(view: View) = DayViewContainer(view, bindings, themeManager)
 
     @InternalCoroutinesApi
     override fun bind(container: DayViewContainer, day: CalendarDay) = container.bind(day)

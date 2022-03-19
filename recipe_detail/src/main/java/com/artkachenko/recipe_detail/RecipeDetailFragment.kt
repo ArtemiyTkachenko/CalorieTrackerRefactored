@@ -8,6 +8,7 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.artkachenko.core_api.base.BaseFragment
 import com.artkachenko.core_api.network.models.IngredientTitles
@@ -73,7 +74,7 @@ class RecipeDetailFragment : BaseFragment(R.layout.fragment_recipe_detail) {
             ingredients.adapter = ingredientsAdapter
         }
 
-        scope.launch {
+        lifecycleScope.launch {
             val details = viewModel.channel.receive()
             setupDetails(details)
         }

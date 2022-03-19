@@ -103,7 +103,7 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarActio
             daySize = Size(dayWidth, dayHeight)
         }
 
-        binding.calendar.dayBinder = DayViewBinder(this, scope, themeManager)
+        binding.calendar.dayBinder = DayViewBinder(this, themeManager)
 
         val currentMonth = YearMonth.now()
         binding.calendar.setup(

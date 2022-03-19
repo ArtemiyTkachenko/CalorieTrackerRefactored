@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
@@ -52,7 +53,7 @@ class RecipeListFragment : BaseFragment(R.layout.fragment_recipe_list), RecipeLi
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentRecipeListBinding.bind(view)
-        scope.launch {
+        lifecycleScope.launch {
             viewModel.recipes.collect {
                 debugLog("from fragment, results are $it")
                 processState(it)

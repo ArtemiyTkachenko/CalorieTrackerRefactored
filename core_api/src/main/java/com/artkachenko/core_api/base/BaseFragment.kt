@@ -13,16 +13,6 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), LifecycleObserver {
-    private val parentJob = Job()
-
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Main
-
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        throwable.printStackTrace()
-    }
-
-    protected val scope = CoroutineScope(SupervisorJob() + coroutineContext + exceptionHandler)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         lifecycle.addObserver(this)
