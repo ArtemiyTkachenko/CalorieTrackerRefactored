@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.artkachenko.ui_utils.views.ThemeAwareFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/selectableItemBackground">
+
+    <com.artkachenko.ui_utils.views.ThemeAwareLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.artkachenko.ui_utils.views.ThemeAwareTextView
+            android:id="@+id/exSevenMonthText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="14sp"
+            tools:text="Jun" />
+
+        <com.artkachenko.ui_utils.views.ThemeAwareTextView
+            android:id="@+id/date_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:textSize="18sp"
+            tools:text="24" />
+
+        <com.artkachenko.ui_utils.views.ThemeAwareTextView
+            android:id="@+id/exSevenDayText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            tools:text="Mon" />
+    </com.artkachenko.ui_utils.views.ThemeAwareLinearLayout>
+
+    <View
+        android:id="@+id/day_view"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_gravity="bottom"/>
+
+</com.artkachenko.ui_utils.views.ThemeAwareFrameLayout>

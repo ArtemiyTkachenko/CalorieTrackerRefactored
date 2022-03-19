@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true">
+
+    <com.artkachenko.ui_utils.views.ThemeAwareImageView
+        android:id="@+id/theme_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <com.artkachenko.ui_utils.views.ThemeAwareConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_30"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".3" />
+
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:background="@drawable/bg_circle"
+            android:src="@drawable/ic_baseline_person_24"
+            android:contentDescription="@string/image_recipe_avatar_description"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/divider_1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/colorPrimaryVariant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline_30" />
+
+        <com.artkachenko.ui_utils.views.ThemeAwareTextView
+            android:id="@+id/dark_theme_title"
+            style="@style/TextAppearance.AppCompat.Medium_18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/dark_theme_toggle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_1" />
+
+        <View
+            android:id="@+id/divider_2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?attr/colorPrimaryVariant"
+
+            app:layout_constraintEnd_toEndOf="@id/divider_1"
+            app:layout_constraintStart_toStartOf="@id/divider_1"
+            app:layout_constraintTop_toBottomOf="@id/dark_theme_title" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/dark_theme_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="@id/dark_theme_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/dark_theme_title" />
+
+        <View
+            android:id="@+id/divider_3"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?attr/colorPrimaryVariant"
+            app:layout_constraintEnd_toEndOf="@id/divider_1"
+            app:layout_constraintStart_toStartOf="@id/divider_1"
+            app:layout_constraintTop_toBottomOf="@id/desired_calories_title" />
+
+
+        <com.artkachenko.ui_utils.views.ThemeAwareTextView
+            android:id="@+id/desired_calories_title"
+            style="@style/TextAppearance.AppCompat.Medium_18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/desired_calories_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_2" />
+
+        <com.artkachenko.ui_utils.views.ThemeAwareEditText
+            android:id="@+id/desired_calories_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:padding="4dp"
+            android:inputType="number"
+            android:background="@android:color/transparent"
+            android:focusable="true"
+            android:textIsSelectable="true"
+            android:imeOptions="actionDone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/desired_calories_title" />
+
+
+    </com.artkachenko.ui_utils.views.ThemeAwareConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

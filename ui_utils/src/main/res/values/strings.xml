@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="apply">Apply</string>
+    <string name="cancel">Cancel</string>
+    <string name="recipes">Recipes</string>
+    <string name="calendar">Calendar</string>
+    <string name="settings">Settings</string>
+    <string name="choose_serving_amount">Choose amount of servings</string>
+    <string name="current_serving_empty">Servings: -</string>
+    <string name="current_serving_amount">Servings: %1$s</string>
+    <string name="current_calories_empty">Calories per serving: -</string>
+    <string name="current_calories_amount">Calories per serving: %1$s</string>
+    <string name="cooking_time">%1$s MINS or less</string>
+    <string name="score">Score: %1$s/100</string>
+    <string name="health_score">Healthy: %1$s/100</string>
+    <string name="nutrition_added">Nutrition added to your calendar</string>
+    <string name="dark_theme_toggle">Dark theme</string>
+    <string name="desired_calories_title">Desired calories</string>
+    <string name="calories_goal">Goal</string>
+    <string name="calories_spent">Spent</string>
+    <string name="calories_left">Left</string>
+    <string name="kcal">Kcal</string>
+    <string name="macronutrients">Macronutrients</string>
+    <string name="used_recipes">Recipes for this day</string>
+    <string name="sources_of_food">Ingredient amounts</string>
+    <string name="fat_percentage">Fat</string>
+    <string name="protein_percentage">Protein</string>
+    <string name="carb_percentage">Carbohydrates</string>
+    <string name="search_placeholder">Type in a query or set filter\nto display results!</string>
+    <string name="italian">Italian</string>
+    <string name="indian">Indian</string>
+    <string name="vegetarian">Vegetarian</string>
+    <string name="quick_meals">Quick meals</string>
+    <string name="search_hint">Type in recipe name</string>
+
+    <string name="image_handle_description">Pull to open</string>
+    <string name="image_back_description">Back</string>
+    <string name="image_recipe_photo_description">Recipe photo</string>
+    <string name="image_recipe_add_description">Recipe photo</string>
+    <string name="image_recipe_search_description">Search</string>
+    <string name="image_recipe_filter_description">Filters</string>
+    <string name="image_recipe_avatar_description">Avatar</string>
+    <string name="image_recipe_more_description">Show more</string>
+
+</resources>

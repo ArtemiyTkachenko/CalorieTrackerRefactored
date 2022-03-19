@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="list_nav_graph" type="id"/>
+    <item name="calendar_nav_graph" type="id"/>
+    <item name="profile_nav_graph" type="id"/>
+    <item name="recipe_detail_nav_graph" type="id"/>
+    <item name="search_nav_graph" type="id"/>
+</resources>
