@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SettingsViewData(
     val isDarkTheme: Boolean,
+    val hasThemeChanged: Boolean,
     val desiredCalories: String,
     val theme: Theme
 ): Parcelable

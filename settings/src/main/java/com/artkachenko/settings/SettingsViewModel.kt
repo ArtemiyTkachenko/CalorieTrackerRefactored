@@ -3,11 +3,13 @@ package com.artkachenko.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artkachenko.core_api.utils.PrefManager
+import com.artkachenko.core_api.utils.debugLog
 import com.artkachenko.ui_utils.themes.Theme
 import com.artkachenko.ui_utils.themes.ThemeManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +23,8 @@ class SettingsViewModel @Inject constructor(
         SettingsViewData(
             isDarkTheme = prefManager.isDarkTheme,
             desiredCalories = prefManager.desiredCalories.toString(),
-            theme = themeManager.theme
+            theme = themeManager.theme,
+            hasThemeChanged = false
         )
     )
 
@@ -46,8 +49,10 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             val newValue = _state.value.copy(
                 theme = newTheme,
-                isDarkTheme = isDarkTheme
+                isDarkTheme = isDarkTheme,
+                hasThemeChanged = true
             )
+
             _state.value = newValue
         }
     }

@@ -34,7 +34,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
         with(binding) {
 
-            darkThemeSwitch.setOnCheckedChangeListener { _, _ ->
+            darkThemeSwitch.setOnClickListener {
                 viewModel.setNewTheme()
             }
 
@@ -92,11 +92,11 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
     private fun initObservers() {
         lifecycleScope.launchWhenResumed {
-            viewModel.state.collect {
+            viewModel.state.collect { data ->
                 with(binding) {
-                    darkThemeSwitch.isChecked = it.isDarkTheme
-                    if (desiredCaloriesText.text.isNullOrEmpty()) desiredCaloriesText.setText(it.desiredCalories)
-                    setTheme()
+                    darkThemeSwitch.isChecked = data.isDarkTheme
+                    if (desiredCaloriesText.text.isNullOrEmpty()) desiredCaloriesText.setText(data.desiredCalories)
+                    if (data.hasThemeChanged) setTheme()
                 }
             }
         }
