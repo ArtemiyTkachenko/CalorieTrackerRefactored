@@ -1,55 +1,25 @@
-package com.artkachenko.calendar.calendar
+package com.artkachenko.calendar.ui.adapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import com.artkachenko.calendar.ui.CalendarActions
 import com.artkachenko.calendar.databinding.ISearchRecipeBinding
 import com.artkachenko.calendar.databinding.IUsedReceiptsHeaderBinding
+import com.artkachenko.calendar.ui.model.CalendarViewData
 import com.artkachenko.core_api.base.BaseAdapter
 import com.artkachenko.core_api.base.BaseViewHolder
 import com.artkachenko.core_api.network.models.RecipeEntity
 import com.artkachenko.ui_utils.*
 import java.util.*
 
-class UsedRecipesAdapter(private val actions: CalendarActions) :
-    RecyclerView.Adapter<UsedRecipeHeaderViewHolder>() {
-
-    private val data = mutableListOf<RecipeEntity>()
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): UsedRecipeHeaderViewHolder {
-        val binding = IUsedReceiptsHeaderBinding.inflate(parent.inflater(), parent, false)
-        return UsedRecipeHeaderViewHolder(binding, actions)
-    }
-
-    override fun onBindViewHolder(holder: UsedRecipeHeaderViewHolder, position: Int) {
-        holder.bind(data)
-    }
-
-    override fun getItemCount() = if (data.isNullOrEmpty()) 0 else 1
-
-    fun setData(recipeList: List<RecipeEntity>) {
-        data.clear()
-        data.addAll(recipeList)
-        notifyItemInserted(0)
-    }
-
-    fun clear() {
-        data.clear()
-        notifyDataSetChanged()
-    }
-}
-
 class UsedRecipeHeaderViewHolder(
     private val binding: IUsedReceiptsHeaderBinding,
     private val actions: CalendarActions
-) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(model: List<RecipeEntity>) {
+) : BaseViewHolder<CalendarViewData.UsedRecipes>(binding.root) {
+    override fun bind(model: CalendarViewData.UsedRecipes) {
         with(binding) {
             val recipesAdapter = UsedRecipesItemAdapter(actions)
             usedRecipes.adapter = recipesAdapter
-            recipesAdapter.setInitial(model)
+            recipesAdapter.setInitial(model.recipes)
         }
     }
 }

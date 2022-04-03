@@ -1,10 +1,10 @@
-package com.artkachenko.calendar.calendar
+package com.artkachenko.calendar.ui.adapter
 
 import android.view.View
+import com.artkachenko.calendar.ui.CalendarActions
 import com.artkachenko.ui_utils.themes.ThemeManager
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.ui.DayBinder
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 
 class DayViewBinder(

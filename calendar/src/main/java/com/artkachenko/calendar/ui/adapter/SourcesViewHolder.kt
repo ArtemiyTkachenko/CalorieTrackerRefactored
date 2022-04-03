@@ -1,4 +1,4 @@
-package com.artkachenko.calendar.calendar
+package com.artkachenko.calendar.ui.adapter
 
 import android.content.Context
 import android.text.Spannable
@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.updateMargins
 import com.artkachenko.calendar.R
 import com.artkachenko.calendar.databinding.IBarItemBinding
+import com.artkachenko.calendar.ui.model.CalendarViewData
 import com.artkachenko.core_api.base.BaseAdapter
 import com.artkachenko.core_api.base.BaseViewHolder
 import com.artkachenko.ui_utils.dp
@@ -17,21 +18,11 @@ import com.artkachenko.ui_utils.inflater
 import com.artkachenko.ui_utils.themes.Themes
 import com.artkachenko.ui_utils.views.ThemeAwareTextView
 
-class SourcesAdapter : BaseAdapter<Map<String, Double>>() {
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): BaseViewHolder<Map<String, Double>> {
-        val binding = IBarItemBinding.inflate(parent.inflater(), parent, false)
-        return SourcesViewHolder(binding)
-    }
-}
-
 class SourcesViewHolder(private val binding: IBarItemBinding) :
-    BaseViewHolder<Map<String, Double>>(binding.root) {
-    override fun bind(model: Map<String, Double>) {
+    BaseViewHolder<CalendarViewData.Sources>(binding.root) {
+    override fun bind(model: CalendarViewData.Sources) {
         with(binding) {
-            val sortedData = model.toList().sortedByDescending { it.second }.take(15)
+            val sortedData = model.sources.toList().sortedByDescending { it.second }.take(15)
             sourcesBarLegend.removeAllViews()
             val values = sortedData.map { it.second }
 

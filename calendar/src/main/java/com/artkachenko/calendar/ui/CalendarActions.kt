@@ -1,4 +1,4 @@
-package com.artkachenko.calendar.calendar
+package com.artkachenko.calendar.ui
 
 import com.artkachenko.core_api.base.ViewHolderActions
 import com.artkachenko.core_api.network.models.RecipeEntity

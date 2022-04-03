@@ -1,4 +1,4 @@
-package com.artkachenko.calendar.calendar
+package com.artkachenko.calendar.ui.adapter
 
 import android.graphics.Color
 import android.view.View
@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.artkachenko.calendar.R
+import com.artkachenko.calendar.ui.CalendarActions
 import com.artkachenko.calendar.databinding.IDayContainerBinding
 import com.artkachenko.ui_utils.Formatters
 import com.artkachenko.ui_utils.setSingleClickListener

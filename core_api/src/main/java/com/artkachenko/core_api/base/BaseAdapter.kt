@@ -33,7 +33,16 @@ abstract class BaseAdapter <T> (private val actions: ViewHolderActions<T> ?= nul
     }
 }
 
-abstract class BaseViewHolder <T>(itemView: View, private val actions: ViewHolderActions<T> ?= null) : RecyclerView.ViewHolder(itemView) {
+abstract class BaseViewHolder<T>(itemView: View, private val actions: ViewHolderActions<T> ?= null) : RecyclerView.ViewHolder(itemView) {
+
+    protected var model: T? = null
+
+    fun bindHolder(item: Any) {
+        (item as T).apply {
+            model = this
+            bind(this)
+        }
+    }
 
     abstract fun bind(model: T)
 }

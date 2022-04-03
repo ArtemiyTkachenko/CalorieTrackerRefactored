@@ -1,4 +1,4 @@
-package com.artkachenko.calendar.calendar
+package com.artkachenko.calendar
 
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -9,7 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
-import com.artkachenko.calendar.R
+import com.artkachenko.calendar.ui.CalendarActions
+import com.artkachenko.calendar.ui.adapter.*
 import com.artkachenko.calendar.databinding.FragmentCalendarBinding
 import com.artkachenko.core_api.base.BaseFragment
 import com.artkachenko.core_api.network.models.RecipeEntity
@@ -40,39 +41,18 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarActio
     @Inject
     lateinit var themeManager: ThemeManager
 
-    @Inject
-    lateinit var prefManager: PrefManager
-
     private val viewModel by viewModels<CalendarViewModel>()
 
     private var binding by viewBinding<FragmentCalendarBinding>()
 
-    private val progressAdapter by lazy {
-        ProgressChartAdapter()
-    }
-
-    private val pieAdapter by lazy {
-        PieAdapter()
-    }
-
-    private val sourcesAdapter by lazy {
-        SourcesAdapter()
-    }
-
-    private val recipesUsedAdapter by lazy {
-        UsedRecipesAdapter(this)
-    }
-
-    private val adapter by lazy {
-        ConcatAdapter(progressAdapter, pieAdapter, sourcesAdapter, recipesUsedAdapter)
+    private val adapter: CalendarAdapter by lazy {
+        CalendarAdapter(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentCalendarBinding.bind(view)
-
-        debugLog("ON_VIEW_CREATED")
 
         with(binding) {
             info.adapter = adapter
@@ -89,29 +69,7 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarActio
             }
         }
 
-        val dm = DisplayMetrics()
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            val display = activity?.display
-            display?.getRealMetrics(dm)
-        } else {
-            val display = activity?.windowManager?.defaultDisplay
-            display?.getMetrics(dm)
-        }
-        binding.calendar.apply {
-            val dayWidth = dm.widthPixels / 7
-            val dayHeight = (dayWidth * 1.5).toInt()
-            daySize = Size(dayWidth, dayHeight)
-        }
-
-        binding.calendar.dayBinder = DayViewBinder(this, themeManager)
-
-        val currentMonth = YearMonth.now()
-        binding.calendar.setup(
-            currentMonth.minusMonths(3),
-            currentMonth.plusMonths(3),
-            DayOfWeek.MONDAY
-        )
-        binding.calendar.scrollToDate(viewModel.selectableDate.value.minusDays(3))
+        setupCalendar()
     }
 
     override fun onItemClicked(model: RecipeEntity, view: View) {
@@ -148,26 +106,47 @@ class CalendarFragment : BaseFragment(R.layout.fragment_calendar), CalendarActio
         super.onDestroy()
     }
 
+    private fun setupCalendar() {
+        val dm = DisplayMetrics()
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            val display = activity?.display
+            display?.getRealMetrics(dm)
+        } else {
+            val display = activity?.windowManager?.defaultDisplay
+            display?.getMetrics(dm)
+        }
+
+        binding.calendar.apply {
+            val dayWidth = dm.widthPixels / 7
+            val dayHeight = (dayWidth * 1.5).toInt()
+            daySize = Size(dayWidth, dayHeight)
+        }
+
+        binding.calendar.dayBinder = DayViewBinder(this, themeManager)
+
+        val currentMonth = YearMonth.now()
+        binding.calendar.setup(
+            currentMonth.minusMonths(3),
+            currentMonth.plusMonths(3),
+            DayOfWeek.MONDAY
+        )
+        binding.calendar.scrollToDate(viewModel.selectableDate.value.minusDays(3))
+    }
+
     private fun processState(state: CalendarViewModel.State) {
         when (state) {
-            is CalendarViewModel.State.Bar -> sourcesAdapter.setInitial(listOf(state.data))
-            is CalendarViewModel.State.Calories -> {
-                progressAdapter.setInitial(listOf(state.data.toLong() to prefManager.desiredCalories.toLong()))
+            is CalendarViewModel.State.Data -> {
+                adapter.submitList(state.data)
             }
-            is CalendarViewModel.State.Dishes -> { }
-            is CalendarViewModel.State.Pie -> pieAdapter.setInitial(listOf(state.data))
             CalendarViewModel.State.Clear -> clearAdapters()
             CalendarViewModel.State.Visible -> binding.info.isVisible = true
-            is CalendarViewModel.State.Recipes -> recipesUsedAdapter.setData(state.data)
             CalendarViewModel.State.Initial -> { }
+            CalendarViewModel.State.FinishedLoading -> {}
         }
     }
 
     private fun clearAdapters() {
         binding.info.isVisible = false
-        pieAdapter.clear()
-        progressAdapter.clear()
-        sourcesAdapter.clear()
-        recipesUsedAdapter.clear()
+        adapter.clear()
     }
 }
