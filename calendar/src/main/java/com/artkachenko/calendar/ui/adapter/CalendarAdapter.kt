@@ -95,6 +95,5 @@ class CalendarAdapter(private val actions: CalendarActions) : ListAdapter<Calend
     }
 
     fun clear() {
-        currentList.clear()
     }
 }

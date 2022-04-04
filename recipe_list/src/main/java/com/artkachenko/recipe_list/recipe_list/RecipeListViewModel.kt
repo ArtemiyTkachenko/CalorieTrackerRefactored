@@ -1,10 +1,14 @@
 package com.artkachenko.recipe_list.recipe_list
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.artkachenko.core_api.base.ViewModelScopeProvider
 import com.artkachenko.core_api.network.models.RecipeEntity
 import com.artkachenko.core_api.usecases.GetRecipeListUseCase
 import com.artkachenko.core_impl.network.Filters
+import com.artkachenko.recipe_list.recipe_list.model.RecipeListItemViewData
+import com.artkachenko.recipe_list.recipe_list.model.RecipeListViewData
+import com.artkachenko.recipe_list.recipe_list.model.RecipeListWrapperData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,29 +29,98 @@ class RecipeListViewModel @Inject constructor(
     val recipes: StateFlow<State>
         get() = _recipes
 
-    fun getRecipeList() {
+    init {
+        getRecipeList()
+    }
+
+    private fun getRecipeList() {
         scope.launch {
-            val italianRecipes = getRecipeListUseCase.execute(0, *Filters.italianPreset.map { it -> it.key to it.value.map { it.value } }.toTypedArray(), Filters.fiveItemPreset)
-            _recipes.emit(State.Italian(italianRecipes))
-            val vegetarianRecipes = getRecipeListUseCase.execute(0, *Filters.vegetarianPreset.map { it -> it.key to it.value.map { it.value } }.toTypedArray(), Filters.fiveItemPreset)
-            _recipes.emit(State.Vegetarian(vegetarianRecipes))
-            val indianRecipes = getRecipeListUseCase.execute(0, *Filters.indianPreset.map { it -> it.key to it.value.map { it.value } }.toTypedArray(), Filters.fiveItemPreset)
-            _recipes.emit(State.Indian(indianRecipes))
-            val quickRecipes = getRecipeListUseCase.execute(0, *Filters.quickPreset.map { it -> it.key to it.value.map { it.value } }.toTypedArray(), Filters.fiveItemPreset)
-            _recipes.emit(State.Quick(quickRecipes))
-            delay(100)
-            _recipes.emit(State.LoadingFinished)
+            val italianPreset = getPreset {
+                getRecipeListUseCase.execute(
+                    0,
+                    *Filters.italianPreset.map { it -> it.key to it.value.map { it.value } }
+                        .toTypedArray(),
+                    Filters.fiveItemPreset
+                )
+            }
+            val vegetarianPreset = getPreset {
+                getRecipeListUseCase.execute(
+                    0,
+                    *Filters.vegetarianPreset.map { it -> it.key to it.value.map { it.value } }
+                        .toTypedArray(),
+                    Filters.fiveItemPreset
+                )
+            }
+            val indianPreset = getPreset {
+                getRecipeListUseCase.execute(
+                    0,
+                    *Filters.indianPreset.map { it -> it.key to it.value.map { it.value } }
+                        .toTypedArray(),
+                    Filters.fiveItemPreset
+                )
+            }
+            val quickPreset = getPreset {
+                getRecipeListUseCase.execute(
+                    0,
+                    *Filters.quickPreset.map { it -> it.key to it.value.map { it.value } }
+                        .toTypedArray(),
+                    Filters.fiveItemPreset
+                )
+            }
+
+            val wrapper = mutableListOf<RecipeListWrapperData>()
+
+            val italian = RecipeListWrapperData(data = italianPreset.mapIndexed { index, recipeEntity ->
+                RecipeListItemViewData.RecipeItemViewData(
+                    id = index,
+                    item = recipeEntity
+                )
+            })
+
+            val vegetarian = RecipeListWrapperData(data = vegetarianPreset.mapIndexed { index, recipeEntity ->
+                RecipeListItemViewData.RecipeItemViewData(
+                    id = index,
+                    item = recipeEntity
+                )
+            })
+
+            val indian = RecipeListWrapperData(data = indianPreset.mapIndexed { index, recipeEntity ->
+                RecipeListItemViewData.RecipeItemViewData(
+                    id = index,
+                    item = recipeEntity
+                )
+            })
+
+            val quick = RecipeListWrapperData(data = quickPreset.mapIndexed { index, recipeEntity ->
+                RecipeListItemViewData.RecipeItemViewData(
+                    id = index,
+                    item = recipeEntity
+                )
+            })
+
+            wrapper.add(italian)
+            wrapper.add(vegetarian)
+            wrapper.add(indian)
+            wrapper.add(quick)
+
+            val data = RecipeListViewData(
+                wrapper = wrapper
+            )
+            _recipes.emit(State.Data(data = data))
         }
+    }
+
+    private suspend fun getPreset(action: suspend () -> List<RecipeEntity>): List<RecipeEntity> {
+        val result = viewModelScope.async {
+            action.invoke()
+        }
+        return result.await()
     }
 
     sealed class State {
         object Initial : State()
         object Loading : State()
         object FirstItemEmitted : State()
-        object LoadingFinished : State()
-        class Italian(val data: List<RecipeEntity>) : State()
-        class Vegetarian(val data: List<RecipeEntity>) : State()
-        class Indian(val data: List<RecipeEntity>) : State()
-        class Quick(val data: List<RecipeEntity>) : State()
+        data class Data(val data: RecipeListViewData) : State()
     }
 }
